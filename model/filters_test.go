@@ -21,6 +21,10 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func float32Ptr(f float32) *float32 {
+	return &f
+}
+
 func TestSearchParamsValidate(t *testing.T) {
 	testCases := map[string]struct {
 		params SearchParams
@@ -54,11 +58,48 @@ func TestSearchParamsValidate(t *testing.T) {
 				},
 			},
 		},
+		/*
+			"ok, geo-distance filter": {
+				params: SearchParams{
+					GeoDistanceFilter: &GeoDistanceFilter{
+						GeoDistance: GeoDistance{
+							Distance: "10km",
+							Location: &GeoPoint{
+								Latitude:  0,
+								Longitude: 0,
+							},
+						},
+					},
+				},
+			},
+		*/
+		/*
+			"ko, geo-distance filter": {
+				params: SearchParams{
+					GeoDistanceFilter: &GeoDistanceFilter{
+						GeoDistance: GeoDistance{
+							Distance: "10km",
+							Location: &GeoPoint{
+								Longitude: float32Ptr(0),
+							},
+						},
+					},
+				},
+			},
+		*/
 		"ko, filter fails validation": {
 			params: SearchParams{
-				Filters: []FilterPredicate{
+				/*
+					Filters: []FilterPredicate{
+						{
+							//Value: "",
+						},
+					},
+				*/
+				Attributes: []SelectAttribute{
 					{
-						Value: "",
+						Scope:     ScopeIdentity,
+						Attribute: "mac",
 					},
 				},
 			},

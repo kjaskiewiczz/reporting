@@ -75,11 +75,12 @@ func (gdf GeoDistanceFilter) Validate() error {
 }
 
 type GeoDistance struct {
-	Distance string   `json:"distance" bson:"distance"`
-	Location GeoPoint `json:"location" bson:"location"`
+	Distance string    `json:"distance" bson:"distance"`
+	Location *GeoPoint `json:"location" bson:"location"`
 }
 
 func (gd GeoDistance) Validate() error {
+	fmt.Printf("DBG: LOCATION: %v\n", gd.Location)
 	return validation.ValidateStruct(&gd,
 		validation.Field(
 			&gd.Distance,
@@ -137,21 +138,21 @@ func (bb BoundingBox) Validate() error {
 }
 
 type GeoPoint struct {
-	Latitude  float32 `json:"lat" bson:"lat"`
-	Longitude float32 `json:"lon" bson:"lon"`
+	Latitude  *float32 `json:"lat" bson:"lat"`
+	Longitude *float32 `json:"lon" bson:"lon"`
 }
 
 func (gp GeoPoint) Validate() error {
 	return validation.ValidateStruct(&gp,
 		validation.Field(
 			&gp.Latitude,
-			validation.Required,
+			validation.NotNil,
 			validation.Min(float32(-90)),
 			validation.Max(float32(90)),
 		),
 		validation.Field(
 			&gp.Longitude,
-			validation.Required,
+			validation.NotNil,
 			validation.Min(float32(-180)),
 			validation.Max(float32(180)),
 		),
